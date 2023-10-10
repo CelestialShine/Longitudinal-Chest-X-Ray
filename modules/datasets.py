@@ -17,7 +17,7 @@ class BaseDataset(Dataset):
         self.examples1={}
         temp=0
         z=0
-        metadata = pd.read_csv('/data/zhuq3/mimic-cxr-2.0.0-metadata.csv',index_col=0)
+        metadata = pd.read_csv('mimic-cxr-2.0.0-metadata.csv',index_col=0)
         metadata.index.name = 'dicom_id'
         metadata = metadata[['StudyDate']]
         file1=open("mimic-context"+self.split+".json","a")
