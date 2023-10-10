@@ -79,7 +79,7 @@ class Transformer(nn.Module):
                            self.encode_word(context, mask), src_mask, att_masks2, tgt, tgt_mask, mask)
 
     def encode_word(self, tgt, tgt_mask):
-        # print("encoder_word",tgt.shape,tgt_mask.shape)
+        
 
         return self.encoder_word(self.tgt_embed(tgt), tgt_mask)
 
@@ -100,15 +100,15 @@ class Transformer(nn.Module):
         memorym = self.rm(self.tgt_embed(tgt), memorym)
 
         memory = self.attn(self.mlp(memorym), hidden_states, hidden_states, src_mask)
-        memory3 = self.attn(self.mlp(memorym), hidden, hidden, mask_all)
+        memory_all= self.attn(self.mlp(memorym), hidden, hidden, mask_all)
         memory = self.mlp1(memory)
-        memory3 = self.mlp1(memory3)
+        memory_all = self.mlp1(memory_all)
         memory1 = memory
 
         mask = mask_all
 
         return self.decoder(self.tgt_embed(tgt), hidden_states, hidden_word, hidden, src_mask, tgt_mask, memory,
-                            memory1, att_mask2, memory3, mask)
+                            memory1, att_mask2, memory_all, mask_all)
 
 class Encoder(nn.Module):
     def __init__(self, layer, N):
@@ -204,13 +204,13 @@ class Decoder(nn.Module):
         self.norm = LayerNorm(layer.d_model)
         self.dropout = nn.Dropout(0.1)
 
-    def forward(self, x, hidden_states, hidden_word, hidden, src_mask, tgt_mask, memory, memory1, mask, memory3,
-                att_mask2):
+    def forward(self, x, hidden_states, hidden_word, hidden, src_mask, tgt_mask, memory, memory1, mask, memory_all,
+                mask_all):
         x1, x2 = x, x
         for layer in self.layers:
             x1 = layer(x1, hidden_states, src_mask, tgt_mask, memory)
             x2 = 0.2 * x1 + 0.8 * x2
-            x2 = layer(x2, hidden, att_mask2, tgt_mask, memory3)
+            x2 = layer(x2, hidden, mask_all, tgt_mask, memory_all)
 
         xx = 0.8 * x1 + 0.2 * x2
         return self.norm(xx)
