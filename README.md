@@ -20,4 +20,6 @@ The structure of annotation.json is as follows:
 
 Wr arrange data based on the "StudyDate" from https://physionet.org/content/mimic-cxr-jpg/2.0.0/ Metadata files.
 
-Run bash run_mimic_cxr.sh to train a model on the MIMIC-CXR data.
+I have also extracted the image paths from the annotation.json file and added them as train.json, test.json, and val.json in this GitHub repository
+
+Run bash run_mimic_cxr.sh to train a model on the data.
